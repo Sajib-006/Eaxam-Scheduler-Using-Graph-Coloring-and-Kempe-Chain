@@ -9,6 +9,9 @@ public class Graph {
     int V;
     int[] deg ;
     int []sorted_deg;
+    int []exam_time;
+    double penalty;
+    ArrayList<Integer> chain;
     ArrayList<Integer> []adj;
     String input_crs ;
     String input_stu ;
@@ -20,6 +23,8 @@ public class Graph {
         deg = new int[V+1];
         Arrays.fill(deg,0);
         sorted_deg = new int[V+1];
+        chain = new ArrayList<Integer>();
+        penalty = 0;
         adj = new ArrayList[V+1];
         for(int i=0;i<V+1;i++)
             adj[i] = new ArrayList<Integer>();
@@ -49,7 +54,7 @@ public class Graph {
         //for(int i=0;i< deg.length;i++) System.out.println(sorted_deg[i]);
     }
     void colorByLargestDegree() throws FileNotFoundException {
-        int []exam_time = new int[V+1];
+        exam_time = new int[V+1];
         Arrays.fill(exam_time, -1);
         //sortByLargestDegree();
         System.out.println(deg.length);
@@ -87,12 +92,13 @@ public class Graph {
         for(int i=0; i<V+1; i++) {
             if(exam_time[i]>total_slots) total_slots = exam_time[i];
         }
+        penalty = calculatePenalty(exam_time);
         System.out.println("TimeSlots: "+ total_slots);
         System.out.println("Penalty: "+ calculatePenalty(exam_time));
 
     }
     void colorByRandomSelection() throws FileNotFoundException {
-        int []exam_time = new int[V+1];
+        exam_time = new int[V+1];
         Arrays.fill(exam_time, -1);
         boolean []blocked = new boolean[V+1];
         Arrays.fill(blocked,false);
@@ -121,11 +127,12 @@ public class Graph {
         for(int i=0; i<V+1; i++) {
             if(exam_time[i]>total_slots) total_slots = exam_time[i];
         }
+        penalty = calculatePenalty(exam_time);
         System.out.println("TimeSlots: "+ total_slots);
         System.out.println("Penalty: "+ calculatePenalty(exam_time));
     }
     void colorByLargestEnrollment(TreeMap<Integer,Integer> map) throws FileNotFoundException {
-        int []exam_time = new int[V+1];
+        exam_time = new int[V+1];
         Arrays.fill(exam_time, -1);
         boolean []blocked = new boolean[V+1];
         Arrays.fill(blocked,false);
@@ -159,6 +166,7 @@ public class Graph {
         for(int i=0; i<V+1; i++) {
             if(exam_time[i]>total_slots) total_slots = exam_time[i];
         }
+        penalty = calculatePenalty(exam_time);
         System.out.println("TimeSlots: "+ total_slots);
         System.out.println("Penalty: "+ calculatePenalty(exam_time));
 
@@ -167,7 +175,7 @@ public class Graph {
 
     }
     void colorGraph(){
-        int []exam_time = new int[V];
+        exam_time = new int[V];
         Arrays.fill(exam_time, -1);
         //sortByLargestDegree();
         System.out.println(deg.length);
@@ -249,6 +257,76 @@ public class Graph {
         }
         //System.out.println("Edges:" + edgeCnt);
         return penalty/total_students;
+    }
+    public void kempeChainUtil(int u, int c_v)
+    {
+        chain.add(u);
+        int i=0;
+        int x;
+        while(i<adj[u].size()) {
+            x = adj[u].get(i);
+            if (exam_time[x] == c_v && !chain.contains(x))
+            {
+                kempeChainUtil(x, exam_time[u]);
+            }
+            i++;
+        }
+    }
+
+    //    void kempeChainUtil(int u, int c_v){
+//        chain.clear();
+//        int x;
+//        Queue<Integer> q = new LinkedList<>();
+//        q.add(u);
+//        while(q.size()!=0){
+//            u = q.remove();
+//            for(int i=0; i<adj[u].size(); i++){
+//                x = adj[i].get(i);
+//                if(exam_time[x]==c_v && !chain.contains(x)){
+//                    chain.add(x);
+//                    q.add(x);
+//                }
+//            }
+//        }
+//        //for()
+//    }
+    void kempeChain(int itr) throws FileNotFoundException {
+
+        Queue<Integer> q = new LinkedList<>();
+        Random rand = new Random();
+
+        int u,v;
+        for(int cnt=0; cnt<itr; cnt++){
+            chain.clear();
+            u = rand.ints(1,V).findFirst().getAsInt();
+
+            while(adj[u].size()==0){
+                u = rand.ints(1,V).findFirst().getAsInt();
+            }
+
+            v = adj[u].get(0);
+            int c_v;
+            c_v = exam_time[v];
+            int time_slot1 = exam_time[u];
+            int time_slot2 = exam_time[v];
+
+            kempeChainUtil(u,c_v);
+
+            int i=0;
+            while(i< chain.size()){
+                if(exam_time[chain.get(i)] == time_slot1)
+                {
+                    exam_time[chain.get(i)] = time_slot2;
+                }
+                else exam_time[chain.get(i)] = time_slot1;
+                i++;
+            }
+        }
+
+        double newPenalty = calculatePenalty(exam_time);
+        if(newPenalty<penalty) penalty = newPenalty;
+        System.out.println("Penalty after applying kempe-chain: "+ penalty);
+
     }
 
 }

@@ -86,10 +86,12 @@ public class Main {
 
         System.out.println();
         g2.colorByLargestDegree();
-        g2.colorByRandomSelection();
+       // g2.colorByRandomSelection();
         sorted_map.putAll(map);
-        System.out.println("Sorted Map: "+ sorted_map);
-        g2.colorByLargestEnrollment(sorted_map);
+        //System.out.println("Sorted Map: "+ sorted_map);
+        //g2.colorByLargestEnrollment(sorted_map);
+        g2.kempeChain(1000);
+
         //g2.colorGraph();
 //        int []deg = new int[]{2,7,6,5,1,4,8};
 //        int[] sortedIndice = IntStream.range(0, deg.length)
