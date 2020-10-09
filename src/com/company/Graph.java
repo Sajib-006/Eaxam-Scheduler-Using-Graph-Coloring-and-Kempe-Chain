@@ -2,6 +2,8 @@ package com.company;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -53,19 +55,20 @@ public class Graph {
                 .mapToInt(ele -> ele).toArray();
         //for(int i=0;i< deg.length;i++) System.out.println(sorted_deg[i]);
     }
-    void colorByLargestDegree() throws FileNotFoundException {
+    void colorByLargestDegree() throws IOException {
+        FileWriter myWriter = new FileWriter("output.txt");
         exam_time = new int[V+1];
         Arrays.fill(exam_time, -1);
         //sortByLargestDegree();
-        System.out.println(deg.length);
-        for(int i=1;i< deg.length;i++) System.out.print(deg[i]+" ");
+        //System.out.println(deg.length);
+        //for(int i=1;i< deg.length;i++) System.out.print(deg[i]+" ");
         IndexComparator comparator = new IndexComparator(deg);
         Integer[] indexes = comparator.createIndexArray();
         Arrays.sort(indexes, comparator);
-        System.out.println("hiiii");
+        //System.out.println("hiiii");
 
-        for(int i=0;i< deg.length-1;i++) System.out.print(indexes[i]+" ");
-        System.out.println();
+        //for(int i=0;i< deg.length-1;i++) System.out.print(indexes[i]+" ");
+        //System.out.println();
         boolean []blocked = new boolean[V+1];
         int u,v;
         Arrays.fill(blocked,false);
@@ -84,10 +87,13 @@ public class Graph {
                 if(!blocked[slot]) break;
             }
             exam_time[u] = slot;
-            System.out.println("Vertex "+u+": "+exam_time[u]);
+            System.out.println(u+" "+exam_time[u]);
             Arrays.fill(blocked,false);
+            myWriter.write(u+" "+exam_time[u]+"\n");
+
         }
-        for(int i=1; i<V+1; i++) System.out.println(i+": "+exam_time[i]);
+        myWriter.close();
+        //for(int i=1; i<V+1; i++) System.out.println(i+": "+exam_time[i]);
         int total_slots = -2;
         for(int i=0; i<V+1; i++) {
             if(exam_time[i]>total_slots) total_slots = exam_time[i];
@@ -97,7 +103,8 @@ public class Graph {
         System.out.println("Penalty: "+ calculatePenalty(exam_time));
 
     }
-    void colorByRandomSelection() throws FileNotFoundException {
+    void colorByRandomSelection() throws IOException {
+        FileWriter myWriter = new FileWriter("output.txt");
         exam_time = new int[V+1];
         Arrays.fill(exam_time, -1);
         boolean []blocked = new boolean[V+1];
@@ -119,10 +126,12 @@ public class Graph {
                 if(!blocked[slot]) break;
             }
             exam_time[u] = slot;
-            System.out.println("Vertex "+u+": "+exam_time[u]);
+            System.out.println(u+" "+exam_time[u]);
             Arrays.fill(blocked,false);
+            myWriter.write(u+" "+exam_time[u]+"\n");
         }
-        for(int i=1; i<V+1; i++) System.out.println(i+": "+exam_time[i]);
+        myWriter.close();
+        //for(int i=1; i<V+1; i++) System.out.println(i+": "+exam_time[i]);
         int total_slots = -2;
         for(int i=0; i<V+1; i++) {
             if(exam_time[i]>total_slots) total_slots = exam_time[i];
@@ -131,7 +140,8 @@ public class Graph {
         System.out.println("TimeSlots: "+ total_slots);
         System.out.println("Penalty: "+ calculatePenalty(exam_time));
     }
-    void colorByLargestEnrollment(TreeMap<Integer,Integer> map) throws FileNotFoundException {
+    void colorByLargestEnrollment(TreeMap<Integer,Integer> map) throws IOException {
+        FileWriter myWriter = new FileWriter("output.txt");
         exam_time = new int[V+1];
         Arrays.fill(exam_time, -1);
         boolean []blocked = new boolean[V+1];
@@ -158,10 +168,12 @@ public class Graph {
                 if(!blocked[slot]) break;
             }
             exam_time[u] = slot;
-            System.out.println("Vertex "+u+": "+exam_time[u]);
+            System.out.println(u+" "+exam_time[u]);
             Arrays.fill(blocked,false);
+            myWriter.write(u+" "+exam_time[u]+"\n");
         }
-        for(int i=1; i<V+1; i++) System.out.println(i+": "+exam_time[i]);
+        myWriter.close();
+        //for(int i=1; i<V+1; i++) System.out.println(i+": "+exam_time[i]);
         int total_slots = -2;
         for(int i=0; i<V+1; i++) {
             if(exam_time[i]>total_slots) total_slots = exam_time[i];
@@ -232,26 +244,30 @@ public class Graph {
             //System.out.println(cur_line);
             String[] parts = cur_line.split(" ");
             int []course = new int[parts.length];
-
-            for(int i=0; i< parts.length; i++)
-            {
-                course[i] = Integer.parseInt(parts[i]);
-
-            }
-
-            for(int i=0; i<course.length; i++){
-                for (int j = i + 1; j < course.length; j++) {
-                    edgeCnt++;
-                    a = course[i];
-                    b = course[j];
-                    if(Math.abs(exam_time[a]-exam_time[b])==1) penalty+=16;
-                    else if(Math.abs(exam_time[a]-exam_time[b])==2) penalty+=8;
-                    else if(Math.abs(exam_time[a]-exam_time[b])==3) penalty+=4;
-                    else if(Math.abs(exam_time[a]-exam_time[b])==4) penalty+=2;
-                    else if(Math.abs(exam_time[a]-exam_time[b])==5) penalty+=1;
+            try{
+                for(int i=0; i< parts.length; i++)
+                {
+                    course[i] = Integer.parseInt(parts[i]);
 
                 }
+
+                for(int i=0; i<course.length; i++){
+                    for (int j = i + 1; j < course.length; j++) {
+                        edgeCnt++;
+                        a = course[i];
+                        b = course[j];
+                        if(Math.abs(exam_time[a]-exam_time[b])==1) penalty+=16;
+                        else if(Math.abs(exam_time[a]-exam_time[b])==2) penalty+=8;
+                        else if(Math.abs(exam_time[a]-exam_time[b])==3) penalty+=4;
+                        else if(Math.abs(exam_time[a]-exam_time[b])==4) penalty+=2;
+                        else if(Math.abs(exam_time[a]-exam_time[b])==5) penalty+=1;
+
+                    }
+                }
+            }catch (NumberFormatException e){
+
             }
+
 
 
         }
