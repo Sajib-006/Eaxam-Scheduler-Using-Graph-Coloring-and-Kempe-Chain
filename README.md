@@ -141,9 +141,16 @@ Benchmark Data Toronto Results
 My result
 (my scheme-1)
 
-Timeslots Penalty Timeslots Penalty
+Timeslots Penalty 
+
+Timeslots Penalty
+
 CAR91 35 4.42
+
 CAR92 32 3.74
+
 KFU93 20 12.96
+
 TRE92 23 7.75
+
 YOR83 21 34.84
