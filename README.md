@@ -5,10 +5,15 @@ TIMETABLINGTORONTO DATASET
 http://www.cs.nott.ac.uk/~pszrq/data.htm
 http://www.asap.cs.nott.ac.uk/external/resources/
  For this assignment, we use five benchmark cases:
+
  CAR91, CAR92, KFU93, TRE92, YOR83DESCRIPTION OF A CASE: YOR83 (181 COURSES, 941 STUDENTS)
+
  yor-f-83.crs (input: course file), yor-f-83.stu (input: student file)
+
  yor83.sol (output: solution file)
+
  A part of yor-f-83.crs (input: course file)
+
 0001 23 (COURSE 0001 HAS 23 STUDENTS)
 0002 19 (COURSE 0002 HAS 19 STUDENTS)
 0003 67
