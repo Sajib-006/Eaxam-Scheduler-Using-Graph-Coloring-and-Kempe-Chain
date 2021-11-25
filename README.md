@@ -1,4 +1,4 @@
-# Eaxam-Scheduler-Using-Graph-Coloring-and-Kempe-Chain
+# Exam-Scheduler-Using-Graph-Coloring-and-Kempe-Chain
 SOLVING EXAMINATION
 TIMETABLINGTORONTO DATASET
  A set of 13 real-world exam timetabling problems
